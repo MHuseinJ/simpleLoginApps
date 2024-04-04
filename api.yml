@@ -17,21 +17,21 @@ info:
 servers:
   - url: http://localhost
 paths:
-  /hello:
-    get:
-      summary: This is just a test endpoint to get you started. Please delete this endpoint.
-      operationId: hello
-      parameters:
-        - name: id
-          in: query
-          required: true
-          schema:
-            type: integer
+  /register:
+    post:
+      summary: Registration API.
+      operationId: register
+      requestBody:
+        description: request body for login
+        content:
+          application/json":
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
       responses:
         '200':
-          description: Test return
+          description: Login Response
           content:
-            application/json:    
+            application/json:
               schema:
                 $ref: "#/components/schemas/BasicResponse"
         '404':
@@ -63,6 +63,65 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BasicResponse"
+  /profile:
+    get:
+      summary: Get Profile API.
+      operationId: getProfile
+      parameters:
+        - in: header
+          name: authorization
+          schema:
+            type: string
+          required: true
+          description: token for login, will get profile detail based on token that sent
+      responses:
+        '200':
+          description: Login Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BasicResponse"
+        '403':
+          description: Not Authorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BasicResponse"
+    put:
+      summary: Update Profile API.
+      operationId: updateProfile
+      parameters:
+        - in: header
+          name: authorization
+          schema:
+            type: string
+          required: true
+          description: token for login, will get profile detail based on token that sent
+      requestBody:
+        description: request body for update profile
+        content:
+          application/json":
+            schema:
+              $ref: "#/components/schemas/ProfileRequest"
+      responses:
+        '200':
+          description: Login Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BasicResponse"
+        '403':
+          description: Not Authorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BasicResponse"
+        '409':
+          description: Conflicted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BasicResponse"
 
 components:
   schemas:
@@ -72,6 +131,16 @@ components:
         - message
       properties:
         message:
+          type: string
+    LoginResponse:
+      type: object
+      required:
+        - id
+        - token
+      properties:
+        id:
+          type: integer
+        token:
           type: string
     LoginRequest:
       type: object
@@ -83,4 +152,34 @@ components:
           type: integer
         password:
           type: string
-
+    RegisterRequest:
+      type: object
+      required:
+        - phone
+        - fullname
+        - password
+      properties:
+        phone:
+          type: integer
+        fullname:
+          type: string
+        password:
+          type: string
+    RegisterResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+    ProfileRequest:
+      type: object
+      required:
+        - phone
+        - fullname
+        - password
+      properties:
+        phone:
+          type: integer
+        fullname:
+          type: string

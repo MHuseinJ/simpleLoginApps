@@ -8,10 +8,17 @@
   */
 
 /** This is test table. Remove this table and replace with your own tables. */
-CREATE TABLE test (
+CREATE TABLE account (
 	id serial PRIMARY KEY,
-	name VARCHAR ( 50 ) UNIQUE NOT NULL
+	full_name VARCHAR ( 60 ) NOT NULL,
+    phone NUMERIC ( 13 ) UNIQUE NOT NULL,
+    password VARCHAR ( 64 ) NOT NULL
 );
 
-INSERT INTO test (name) VALUES ('test1');
-INSERT INTO test (name) VALUES ('test2');
+CREATE TABLE auth (
+    id serial PRIMARY KEY,
+    account_id serial UNIQUE,
+    token VARCHAR NOT NULL,
+    expire DATE NOT NULL,
+    CONSTRAINT fk_account_auth FOREIGN KEY(account_id) REFERENCES account(id)
+);

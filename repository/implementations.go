@@ -15,8 +15,16 @@ func (r *Repository) GetAccountByPhoneAndPassword(ctx context.Context, phone str
 func (r *Repository) UpdateAccount(ctx context.Context, account Account) (output Account, err error) {
 	return
 }
-func (r *Repository) CreateAccount(ctx context.Context, account Account) (output Account, err error) {
-	return
+func (r *Repository) CreateAccount(account Account) (output Account, err error) {
+	queryStr := `INSERT INTO account (phone, password, fullname) 
+VALUES ($1, $2, $3)`
+	result, err := r.Db.Exec(queryStr, account.Phone, account.Password, account.FullName)
+	if err != nil {
+		return account, err
+	}
+	lastInsertedId, _ := result.LastInsertId()
+	account.Id = int(lastInsertedId)
+	return account, nil
 }
 func (r *Repository) UpdateLoginData(account Account, jwt string) (output Account, err error) {
 	queryStr := `INSERT INTO login (account_id, success_login, token) 

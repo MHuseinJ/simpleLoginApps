@@ -35,18 +35,18 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 }
 
 // CreateAccount mocks base method.
-func (m *MockRepositoryInterface) CreateAccount(ctx context.Context, account Account) (Account, error) {
+func (m *MockRepositoryInterface) CreateAccount(account Account) (Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAccount", ctx, account)
+	ret := m.ctrl.Call(m, "CreateAccount", account)
 	ret0, _ := ret[0].(Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateAccount indicates an expected call of CreateAccount.
-func (mr *MockRepositoryInterfaceMockRecorder) CreateAccount(ctx, account interface{}) *gomock.Call {
+func (mr *MockRepositoryInterfaceMockRecorder) CreateAccount(account interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockRepositoryInterface)(nil).CreateAccount), ctx, account)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockRepositoryInterface)(nil).CreateAccount), account)
 }
 
 // GetAccountByPhoneAndPassword mocks base method.

@@ -9,7 +9,7 @@ import "context"
 type RepositoryInterface interface {
 	GetAccountByPhoneAndPassword(ctx context.Context, phone string, password string) (output Account, err error)
 	UpdateAccount(ctx context.Context, account Account) (output Account, err error)
-	CreateAccount(ctx context.Context, account Account) (output Account, err error)
+	CreateAccount(account Account) (output Account, err error)
 	UpdateLoginData(account Account, jwt string) (output Account, err error)
 	GetAuthByAccountId(ctx context.Context, id int) (output Account, err error)
 }

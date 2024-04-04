@@ -56,6 +56,38 @@ func (s *Server) UpdateProfile(ctx echo.Context, params generated.UpdateProfileP
 }
 
 func (s *Server) Register(ctx echo.Context) error {
-	//Todo Implement Register Profile
-	return nil
+	var req generated.RegisterRequest
+	var resp generated.RegisterResponse
+	json_map := make(map[string]interface{})
+	err := json.NewDecoder(ctx.Request().Body).Decode(&json_map)
+	if err != nil {
+		fmt.Println(err.Error())
+		return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: err.Error()})
+	} else {
+		req.Phone = json_map["phone"].(string)
+		req.Password = json_map["password"].(string)
+		req.Fullname = json_map["fullname"].(string)
+		errors := validateRegisterRequest(req)
+		if len(errors) > 0 {
+			return ctx.JSON(http.StatusBadRequest, generated.ErrorResponse{
+				Message: "failed create account, bad request",
+				Errors:  errors,
+			})
+		}
+		hashedPassword := createHash(req.Password)
+		fmt.Println(hashedPassword)
+		account := repository.Account{
+			Phone:    req.Phone,
+			Password: createHash(hashedPassword),
+			FullName: req.Fullname,
+		}
+		createdAccount, err := s.Repository.CreateAccount(account)
+		if err != nil {
+			fmt.Println(err.Error())
+			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: "failed create account, reason: " + err.Error()})
+		}
+		resp.Message = fmt.Sprintf("success create account for %s", account.Phone)
+		resp.Id = createdAccount.Id
+		return ctx.JSON(http.StatusOK, resp)
+	}
 }

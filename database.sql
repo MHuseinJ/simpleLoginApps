@@ -10,7 +10,7 @@
 /** This is test table. Remove this table and replace with your own tables. */
 CREATE TABLE account (
 	id serial PRIMARY KEY,
-	full_name VARCHAR ( 60 ) NOT NULL,
+	fullname VARCHAR ( 60 ) NOT NULL,
     phone VARCHAR ( 13 ) UNIQUE NOT NULL,
     password VARCHAR ( 64 ) NOT NULL
 );

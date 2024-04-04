@@ -33,13 +33,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicResponse"
-        '404':
-          description: Not found
+                $ref: "#/components/schemas/RegisterResponse"
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicResponse"
+                $ref: "#/components/schemas/ErrorResponse"
   /login:
     post:
       summary: Login API.
@@ -132,6 +132,17 @@ components:
       properties:
         message:
           type: string
+    ErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/BasicResponse"
+        - type: object
+          required:
+            - errors
+          properties:
+            errors:
+              type: array
+              items:
+                type: string
     LoginResponse:
       allOf:
         - $ref: "#/components/schemas/BasicResponse"
@@ -162,24 +173,33 @@ components:
         - password
       properties:
         phone:
-          type: integer
+          type: string
+          maxLength: 15
+          minLength: 13
+          pattern: '^\+62\d{11,13}$'
         fullname:
           type: string
+          maxLength: 60
+          minLength: 3
         password:
           type: string
+          maxLength: 64
+          minLength: 6
+          pattern: '^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).*$'
     RegisterResponse:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          type: integer
+      allOf:
+        - $ref: "#/components/schemas/BasicResponse"
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: integer
     ProfileRequest:
       type: object
       required:
         - phone
         - fullname
-        - password
       properties:
         phone:
           type: integer

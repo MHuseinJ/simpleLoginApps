@@ -16,9 +16,9 @@ type Account struct {
 	Password string
 }
 
-type Auth struct {
-	Id        int
-	AccountId string
-	Token     string
-	Expired   string
+type Login struct {
+	Id           int
+	AccountId    string
+	Token        string
+	successLogin int
 }

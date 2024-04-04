@@ -4,20 +4,42 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/SawitProRecruitment/UserService/generated"
+	"github.com/SawitProRecruitment/UserService/repository"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 func (s *Server) Login(ctx echo.Context) error {
-	var resp generated.BasicResponse
+	var resp generated.LoginResponse
+	context := ctx.Request().Context()
 	json_map := make(map[string]interface{})
 	err := json.NewDecoder(ctx.Request().Body).Decode(&json_map)
 	if err != nil {
-		return err
+		fmt.Println(err.Error())
+		return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: err.Error()})
 	} else {
-		phone := json_map["phone"]
-		password := json_map["password"]
-		resp.Message = fmt.Sprintf("Login %d Password %s", phone, password)
+		phone := json_map["phone"].(string)
+		password := json_map["password"].(string)
+		var foundAccount repository.Account
+		hashedPassword := createHash(password)
+		foundAccount, err = s.Repository.GetAccountByPhoneAndPassword(context, phone, hashedPassword)
+		if err != nil {
+			fmt.Println(err.Error())
+			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: err.Error()})
+		}
+		token, err := createToken(foundAccount.FullName)
+		if err != nil {
+			fmt.Println(err.Error())
+			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: err.Error()})
+		}
+		foundAccount, err = s.Repository.UpdateLoginData(context, foundAccount, token)
+		if err != nil {
+			fmt.Println(err.Error())
+			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: err.Error()})
+		}
+		resp.Message = fmt.Sprintf("success login for +%s", phone)
+		resp.Token = token
+		resp.Id = foundAccount.Id
 		return ctx.JSON(http.StatusOK, resp)
 	}
 }

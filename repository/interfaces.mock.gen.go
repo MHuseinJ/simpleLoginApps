@@ -34,17 +34,77 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 	return m.recorder
 }
 
-// GetTestById mocks base method.
-func (m *MockRepositoryInterface) GetTestById(ctx context.Context, input GetTestByIdInput) (GetTestByIdOutput, error) {
+// CreateAccount mocks base method.
+func (m *MockRepositoryInterface) CreateAccount(ctx context.Context, account Account) (Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTestById", ctx, input)
-	ret0, _ := ret[0].(GetTestByIdOutput)
+	ret := m.ctrl.Call(m, "CreateAccount", ctx, account)
+	ret0, _ := ret[0].(Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetTestById indicates an expected call of GetTestById.
-func (mr *MockRepositoryInterfaceMockRecorder) GetTestById(ctx, input interface{}) *gomock.Call {
+// CreateAccount indicates an expected call of CreateAccount.
+func (mr *MockRepositoryInterfaceMockRecorder) CreateAccount(ctx, account interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTestById", reflect.TypeOf((*MockRepositoryInterface)(nil).GetTestById), ctx, input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockRepositoryInterface)(nil).CreateAccount), ctx, account)
+}
+
+// GetAccountByPhoneAndPassword mocks base method.
+func (m *MockRepositoryInterface) GetAccountByPhoneAndPassword(ctx context.Context, phone, password string) (Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAccountByPhoneAndPassword", ctx, phone, password)
+	ret0, _ := ret[0].(Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAccountByPhoneAndPassword indicates an expected call of GetAccountByPhoneAndPassword.
+func (mr *MockRepositoryInterfaceMockRecorder) GetAccountByPhoneAndPassword(ctx, phone, password interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByPhoneAndPassword", reflect.TypeOf((*MockRepositoryInterface)(nil).GetAccountByPhoneAndPassword), ctx, phone, password)
+}
+
+// GetAuthByAccountId mocks base method.
+func (m *MockRepositoryInterface) GetAuthByAccountId(ctx context.Context, id int) (Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAuthByAccountId", ctx, id)
+	ret0, _ := ret[0].(Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAuthByAccountId indicates an expected call of GetAuthByAccountId.
+func (mr *MockRepositoryInterfaceMockRecorder) GetAuthByAccountId(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthByAccountId", reflect.TypeOf((*MockRepositoryInterface)(nil).GetAuthByAccountId), ctx, id)
+}
+
+// UpdateAccount mocks base method.
+func (m *MockRepositoryInterface) UpdateAccount(ctx context.Context, account Account) (Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAccount", ctx, account)
+	ret0, _ := ret[0].(Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateAccount indicates an expected call of UpdateAccount.
+func (mr *MockRepositoryInterfaceMockRecorder) UpdateAccount(ctx, account interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockRepositoryInterface)(nil).UpdateAccount), ctx, account)
+}
+
+// UpdateLoginData mocks base method.
+func (m *MockRepositoryInterface) UpdateLoginData(ctx context.Context, account Account, jwt string) (Account, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateLoginData", ctx, account, jwt)
+	ret0, _ := ret[0].(Account)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateLoginData indicates an expected call of UpdateLoginData.
+func (mr *MockRepositoryInterfaceMockRecorder) UpdateLoginData(ctx, account, jwt interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLoginData", reflect.TypeOf((*MockRepositoryInterface)(nil).UpdateLoginData), ctx, account, jwt)
 }

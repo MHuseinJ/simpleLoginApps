@@ -11,14 +11,14 @@
 CREATE TABLE account (
 	id serial PRIMARY KEY,
 	full_name VARCHAR ( 60 ) NOT NULL,
-    phone NUMERIC ( 13 ) UNIQUE NOT NULL,
+    phone VARCHAR ( 13 ) UNIQUE NOT NULL,
     password VARCHAR ( 64 ) NOT NULL
 );
 
-CREATE TABLE auth (
+CREATE TABLE login (
     id serial PRIMARY KEY,
     account_id serial UNIQUE,
+    success_login INT DEFAULT 0,
     token VARCHAR NOT NULL,
-    expire DATE NOT NULL,
     CONSTRAINT fk_account_auth FOREIGN KEY(account_id) REFERENCES account(id)
 );

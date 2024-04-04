@@ -7,9 +7,9 @@ package repository
 import "context"
 
 type RepositoryInterface interface {
-	GetAccountByPhone(ctx context.Context, phone string) (output Account, err error)
+	GetAccountByPhoneAndPassword(ctx context.Context, phone string, password string) (output Account, err error)
 	UpdateAccount(ctx context.Context, account Account) (output Account, err error)
 	CreateAccount(ctx context.Context, account Account) (output Account, err error)
-	CreateAuth(ctx context.Context, auth Auth) (output Auth, err error)
+	UpdateLoginData(ctx context.Context, account Account, jwt string) (output Account, err error)
 	GetAuthByAccountId(ctx context.Context, id int) (output Account, err error)
 }

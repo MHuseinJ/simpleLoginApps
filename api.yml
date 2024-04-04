@@ -56,9 +56,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicResponse"
-        '404':
-          description: Not found
+                $ref: "#/components/schemas/LoginResponse"
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -133,15 +133,17 @@ components:
         message:
           type: string
     LoginResponse:
-      type: object
-      required:
-        - id
-        - token
-      properties:
-        id:
-          type: integer
-        token:
-          type: string
+      allOf:
+        - $ref: "#/components/schemas/BasicResponse"
+        - type: object
+          required:
+            - id
+            - token
+          properties:
+            id:
+              type: integer
+            token:
+              type: string
     LoginRequest:
       type: object
       required:

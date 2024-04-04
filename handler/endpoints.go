@@ -22,20 +22,21 @@ func (s *Server) Login(ctx echo.Context) error {
 		password := json_map["password"].(string)
 		var foundAccount repository.Account
 		hashedPassword := createHash(password)
+		fmt.Println(hashedPassword)
 		foundAccount, err = s.Repository.GetAccountByPhoneAndPassword(context, phone, hashedPassword)
 		if err != nil {
 			fmt.Println(err.Error())
-			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: err.Error()})
+			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: "account not found, reason: " + err.Error()})
 		}
 		token, err := createToken(foundAccount.FullName)
 		if err != nil {
 			fmt.Println(err.Error())
-			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: err.Error()})
+			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: "create token error, reason: " + err.Error()})
 		}
-		foundAccount, err = s.Repository.UpdateLoginData(context, foundAccount, token)
+		foundAccount, err = s.Repository.UpdateLoginData(foundAccount, token)
 		if err != nil {
 			fmt.Println(err.Error())
-			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: err.Error()})
+			return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: "update login failed, reason: " + err.Error()})
 		}
 		resp.Message = fmt.Sprintf("success login for +%s", phone)
 		resp.Token = token

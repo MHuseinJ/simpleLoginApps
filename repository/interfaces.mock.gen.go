@@ -95,16 +95,16 @@ func (mr *MockRepositoryInterfaceMockRecorder) UpdateAccount(ctx, account interf
 }
 
 // UpdateLoginData mocks base method.
-func (m *MockRepositoryInterface) UpdateLoginData(ctx context.Context, account Account, jwt string) (Account, error) {
+func (m *MockRepositoryInterface) UpdateLoginData(account Account, jwt string) (Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateLoginData", ctx, account, jwt)
+	ret := m.ctrl.Call(m, "UpdateLoginData", account, jwt)
 	ret0, _ := ret[0].(Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpdateLoginData indicates an expected call of UpdateLoginData.
-func (mr *MockRepositoryInterfaceMockRecorder) UpdateLoginData(ctx, account, jwt interface{}) *gomock.Call {
+func (mr *MockRepositoryInterfaceMockRecorder) UpdateLoginData(account, jwt interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLoginData", reflect.TypeOf((*MockRepositoryInterface)(nil).UpdateLoginData), ctx, account, jwt)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateLoginData", reflect.TypeOf((*MockRepositoryInterface)(nil).UpdateLoginData), account, jwt)
 }

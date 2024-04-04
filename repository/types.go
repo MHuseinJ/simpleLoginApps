@@ -10,14 +10,14 @@ type GetTestByIdOutput struct {
 }
 
 type Account struct {
-	Id       string
+	Id       int
 	FullName string
 	Phone    string
 	Password string
 }
 
 type Auth struct {
-	Id        string
+	Id        int
 	AccountId string
 	Token     string
 	Expired   string

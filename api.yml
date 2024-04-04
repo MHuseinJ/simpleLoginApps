@@ -52,7 +52,7 @@ paths:
               $ref: "#/components/schemas/LoginRequest"
       responses:
         '200':
-          description: Login Response
+          description: Success Login Response
           content:
             application/json:
               schema:
@@ -76,17 +76,17 @@ paths:
           description: token for login, will get profile detail based on token that sent
       responses:
         '200':
-          description: Login Response
+          description: Success Get Profile Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicResponse"
+                $ref: "#/components/schemas/ProfileResponse"
         '403':
           description: Not Authorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicResponse"
+                $ref: "#/components/schemas/ErrorResponse"
     put:
       summary: Update Profile API.
       operationId: updateProfile
@@ -109,19 +109,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicResponse"
+                $ref: "#/components/schemas/ProfileResponse"
         '403':
           description: Not Authorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicResponse"
+                $ref: "#/components/schemas/ErrorResponse"
         '409':
           description: Conflicted
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BasicResponse"
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   schemas:
@@ -202,6 +202,18 @@ components:
         - fullname
       properties:
         phone:
-          type: integer
+          type: string
         fullname:
           type: string
+    ProfileResponse:
+      allOf:
+      - $ref: "#/components/schemas/BasicResponse"
+      - type: object
+        required:
+        - phone
+        - fullname
+        properties:
+          phone:
+            type: string
+          fullname:
+            type: string

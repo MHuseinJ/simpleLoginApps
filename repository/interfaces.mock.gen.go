@@ -64,19 +64,19 @@ func (mr *MockRepositoryInterfaceMockRecorder) GetAccountByPhoneAndPassword(ctx,
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByPhoneAndPassword", reflect.TypeOf((*MockRepositoryInterface)(nil).GetAccountByPhoneAndPassword), ctx, phone, password)
 }
 
-// GetAuthByAccountId mocks base method.
-func (m *MockRepositoryInterface) GetAuthByAccountId(ctx context.Context, id int) (Account, error) {
+// GetAccountByToken mocks base method.
+func (m *MockRepositoryInterface) GetAccountByToken(ctx context.Context, token string) (Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAuthByAccountId", ctx, id)
+	ret := m.ctrl.Call(m, "GetAccountByToken", ctx, token)
 	ret0, _ := ret[0].(Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAuthByAccountId indicates an expected call of GetAuthByAccountId.
-func (mr *MockRepositoryInterfaceMockRecorder) GetAuthByAccountId(ctx, id interface{}) *gomock.Call {
+// GetAccountByToken indicates an expected call of GetAccountByToken.
+func (mr *MockRepositoryInterfaceMockRecorder) GetAccountByToken(ctx, token interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthByAccountId", reflect.TypeOf((*MockRepositoryInterface)(nil).GetAuthByAccountId), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountByToken", reflect.TypeOf((*MockRepositoryInterface)(nil).GetAccountByToken), ctx, token)
 }
 
 // UpdateAccount mocks base method.

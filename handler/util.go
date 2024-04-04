@@ -67,7 +67,7 @@ func validateRegisterRequest(request generated.RegisterRequest) []string {
 }
 
 func verifyToken(tokenString string) error {
-	var secretKey = os.Getenv("SECRET")
+	var secretKey = []byte(os.Getenv("SECRET"))
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
@@ -79,6 +79,6 @@ func verifyToken(tokenString string) error {
 	if !token.Valid {
 		return fmt.Errorf("invalid token")
 	}
-
+	fmt.Println(token.Raw)
 	return nil
 }

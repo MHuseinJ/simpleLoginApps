@@ -11,5 +11,5 @@ type RepositoryInterface interface {
 	UpdateAccount(ctx context.Context, account Account) (output Account, err error)
 	CreateAccount(account Account) (output Account, err error)
 	UpdateLoginData(account Account, jwt string) (output Account, err error)
-	GetAuthByAccountId(ctx context.Context, id int) (output Account, err error)
+	GetAccountByToken(ctx context.Context, token string) (output Account, err error)
 }

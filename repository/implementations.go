@@ -5,7 +5,7 @@ import (
 )
 
 func (r *Repository) GetAccountByPhoneAndPassword(ctx context.Context, phone string, password string) (output Account, err error) {
-	queryStr := `SELECT full_name, id, phone FROM account WHERE phone = $1 AND password = $2`
+	queryStr := `SELECT fullname, id, phone FROM account WHERE phone = $1 AND password = $2`
 	err = r.Db.QueryRowContext(ctx, queryStr, phone, password).Scan(&output.FullName, &output.Id, &output.Phone)
 	if err != nil {
 		return Account{}, err
@@ -36,6 +36,11 @@ ON CONFLICT (account_id) DO UPDATE SET success_login = login.success_login + 1, 
 	}
 	return account, nil
 }
-func (r *Repository) GetAuthByAccountId(ctx context.Context, id int) (output Account, err error) {
-	return
+func (r *Repository) GetAccountByToken(ctx context.Context, token string) (output Account, err error) {
+	queryStr := `SELECT a.id, a.phone, a.fullname FROM account a JOIN login l ON a.id = l.account_id WHERE l.token = $1`
+	err = r.Db.QueryRowContext(ctx, queryStr, token).Scan(&output.Id, &output.Phone, &output.FullName)
+	if err != nil {
+		return Account{}, err
+	}
+	return output, err
 }

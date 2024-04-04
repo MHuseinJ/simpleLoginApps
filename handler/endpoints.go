@@ -46,8 +46,18 @@ func (s *Server) Login(ctx echo.Context) error {
 }
 
 func (s *Server) GetProfile(ctx echo.Context, params generated.GetProfileParams) error {
-	//Todo Implement Get Profile
-	return nil
+	err := verifyToken(params.Authorization)
+	if err != nil {
+		fmt.Println(err.Error())
+		return ctx.JSON(http.StatusForbidden, generated.BasicResponse{Message: "Forbidden Access: " + err.Error()})
+	}
+	account, err := s.Repository.GetAccountByToken(ctx.Request().Context(), params.Authorization)
+
+	return ctx.JSON(http.StatusOK, generated.ProfileResponse{
+		Message:  "Success Retrieve Profile",
+		Fullname: account.FullName,
+		Phone:    account.Phone,
+	})
 }
 
 func (s *Server) UpdateProfile(ctx echo.Context, params generated.UpdateProfileParams) error {

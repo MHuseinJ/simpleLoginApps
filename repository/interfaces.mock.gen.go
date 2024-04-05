@@ -80,18 +80,18 @@ func (mr *MockRepositoryInterfaceMockRecorder) GetAccountByToken(ctx, token inte
 }
 
 // UpdateAccount mocks base method.
-func (m *MockRepositoryInterface) UpdateAccount(ctx context.Context, account Account) (Account, error) {
+func (m *MockRepositoryInterface) UpdateAccount(account Account) (Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateAccount", ctx, account)
+	ret := m.ctrl.Call(m, "UpdateAccount", account)
 	ret0, _ := ret[0].(Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpdateAccount indicates an expected call of UpdateAccount.
-func (mr *MockRepositoryInterfaceMockRecorder) UpdateAccount(ctx, account interface{}) *gomock.Call {
+func (mr *MockRepositoryInterfaceMockRecorder) UpdateAccount(account interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockRepositoryInterface)(nil).UpdateAccount), ctx, account)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAccount", reflect.TypeOf((*MockRepositoryInterface)(nil).UpdateAccount), account)
 }
 
 // UpdateLoginData mocks base method.

@@ -21,7 +21,7 @@ func (s *Server) Login(ctx echo.Context) error {
 		phone := json_map["phone"].(string)
 		password := json_map["password"].(string)
 		var foundAccount repository.Account
-		hashedPassword := createHash(password)
+		hashedPassword := CreateHash(password)
 		fmt.Println(hashedPassword)
 		foundAccount, err = s.Repository.GetAccountByPhoneAndPassword(context, phone, hashedPassword)
 		if err != nil {
@@ -119,7 +119,7 @@ func (s *Server) Register(ctx echo.Context) error {
 				Errors:  errors,
 			})
 		}
-		hashedPassword := createHash(req.Password)
+		hashedPassword := CreateHash(req.Password)
 		fmt.Println(hashedPassword)
 		account := repository.Account{
 			Phone:    req.Phone,

@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func createHash(password string) string {
+func CreateHash(password string) string {
 	var salt = os.Getenv("SALT")
 	var sha = sha1.New()
 	sha.Write([]byte(password + salt))

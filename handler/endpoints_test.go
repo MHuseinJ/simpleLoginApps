@@ -152,7 +152,7 @@ func TestServer_Login(t *testing.T) {
 				req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 				rec = httptest.NewRecorder()
 				ctxMock = e.NewContext(req, rec)
-				mockRepo.EXPECT().GetAccountByPhoneAndPassword(ctxMock.Request().Context(), "+62812345678", createHash("password")).Return(repository.Account{}, nil)
+				mockRepo.EXPECT().GetAccountByPhoneAndPassword(ctxMock.Request().Context(), "+62812345678", CreateHash("password")).Return(repository.Account{}, nil)
 				mockRepo.EXPECT().UpdateLoginData(repository.Account{}, gomock.Any()).Return(repository.Account{}, nil)
 			},
 		},
@@ -228,7 +228,7 @@ func TestServer_Register(t *testing.T) {
 				mockRepo.EXPECT().CreateAccount(repository.Account{
 					FullName: "john due",
 					Phone:    "+62812345678",
-					Password: createHash("Password!1"),
+					Password: CreateHash("Password!1"),
 				}).Return(repository.Account{}, nil)
 			},
 		},
@@ -250,7 +250,7 @@ func TestServer_Register(t *testing.T) {
 				mockRepo.EXPECT().CreateAccount(repository.Account{
 					FullName: "john due",
 					Phone:    "+62812345678",
-					Password: createHash("Password!1"),
+					Password: CreateHash("Password!1"),
 				}).Return(repository.Account{}, fmt.Errorf("duplicate constraint for phone"))
 			},
 		},

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -114,47 +115,71 @@ func TestServer_GetProfile(t *testing.T) {
 
 func TestServer_Login(t *testing.T) {
 	ctrl := gomock.NewController(t)
+	var rec *httptest.ResponseRecorder
+	var req *http.Request
+	var ctxMock echo.Context
+	//var token string
 	mockRepo := repository.NewMockRepositoryInterface(ctrl)
 	defer ctrl.Finish()
-	// Setup
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodGet, "/profile", `{"name":"Jon Snow","email":"jon@labstack.com"}`)
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	rec := httptest.NewRecorder()
-	ctxMock := e.NewContext(req, rec)
-	token, _ := createToken("token")
+
 	type fields struct {
 		Repository repository.RepositoryInterface
 	}
 	type args struct {
-		ctx echo.Context
+		ctx *echo.Context
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
 		wantErr bool
+		mock    func()
 	}{
-		//{
-		//	name: "testing get login",
-		//	args: args{
-		//		ctx: ctxMock
-		//	},
-		//	fields: fields{
-		//		Repository: mockRepo,
-		//	},
-		//	wantErr: false,
-		//	mock: func() {
-		//		mockRepo.EXPECT().GetAccountByToken(ctxMock.Request().Context(), token).Return(repository.Account{}, nil)
-		//	},
-		//},
+		{
+			name: "testing login with correct credential",
+			args: args{
+				ctx: &ctxMock,
+			},
+			fields: fields{
+				Repository: mockRepo,
+			},
+			wantErr: false,
+			mock: func() {
+				req = httptest.NewRequest(http.MethodPost, "/profile", strings.NewReader(
+					`{"phone":"+62812345678","password":"password"}`))
+				req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+				rec = httptest.NewRecorder()
+				ctxMock = e.NewContext(req, rec)
+				mockRepo.EXPECT().GetAccountByPhoneAndPassword(ctxMock.Request().Context(), "+62812345678", createHash("password")).Return(repository.Account{}, nil)
+				mockRepo.EXPECT().UpdateLoginData(repository.Account{}, gomock.Any()).Return(repository.Account{}, nil)
+			},
+		},
+		{
+			name: "testing login with uncorrected json format",
+			args: args{
+				ctx: &ctxMock,
+			},
+			fields: fields{
+				Repository: mockRepo,
+			},
+			wantErr: false,
+			mock: func() {
+				req = httptest.NewRequest(http.MethodPost, "/profile", strings.NewReader(
+					`{"phone":"+62812345678","password":"password",}`))
+				req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+				rec = httptest.NewRecorder()
+				ctxMock = e.NewContext(req, rec)
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			tt.mock()
 			s := &Server{
 				Repository: tt.fields.Repository,
 			}
-			if err := s.Login(tt.args.ctx); (err != nil) != tt.wantErr {
+			if err := s.Login(*tt.args.ctx); (err != nil) != tt.wantErr {
 				t.Errorf("Login() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -162,26 +187,75 @@ func TestServer_Login(t *testing.T) {
 }
 
 func TestServer_Register(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	var rec *httptest.ResponseRecorder
+	var req *http.Request
+	var ctxMock echo.Context
+	//var token string
+	mockRepo := repository.NewMockRepositoryInterface(ctrl)
+	defer ctrl.Finish()
+	e := echo.New()
+
 	type fields struct {
 		Repository repository.RepositoryInterface
 	}
 	type args struct {
-		ctx echo.Context
+		ctx *echo.Context
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
 		wantErr bool
+		mock    func()
 	}{
-		// TODO: Add test cases.
+		{
+			name: "register with correct credential",
+			args: args{
+				ctx: &ctxMock,
+			},
+			fields: fields{
+				Repository: mockRepo,
+			},
+			wantErr: false,
+			mock: func() {
+				req = httptest.NewRequest(http.MethodPost, "/register", strings.NewReader(
+					`{"phone":"+62812345678","password":"Password!1","fullname":"john due"}`))
+				req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+				rec = httptest.NewRecorder()
+				ctxMock = e.NewContext(req, rec)
+				mockRepo.EXPECT().CreateAccount(repository.Account{
+					FullName: "john due",
+					Phone:    "+62812345678",
+					Password: createHash("Password!1"),
+				}).Return(repository.Account{}, nil)
+			},
+		},
+		{
+			name: "register with unqualified password",
+			args: args{
+				ctx: &ctxMock,
+			},
+			fields: fields{
+				Repository: mockRepo,
+			},
+			wantErr: false,
+			mock: func() {
+				req = httptest.NewRequest(http.MethodPost, "/register", strings.NewReader(
+					`{"phone":"+62812345678","password":"password","fullname":"john due"}`))
+				req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+				rec = httptest.NewRecorder()
+				ctxMock = e.NewContext(req, rec)
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			tt.mock()
 			s := &Server{
 				Repository: tt.fields.Repository,
 			}
-			if err := s.Register(tt.args.ctx); (err != nil) != tt.wantErr {
+			if err := s.Register(*tt.args.ctx); (err != nil) != tt.wantErr {
 				t.Errorf("Register() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

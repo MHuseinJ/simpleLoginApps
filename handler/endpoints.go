@@ -123,7 +123,7 @@ func (s *Server) Register(ctx echo.Context) error {
 		fmt.Println(hashedPassword)
 		account := repository.Account{
 			Phone:    req.Phone,
-			Password: createHash(hashedPassword),
+			Password: hashedPassword,
 			FullName: req.Fullname,
 		}
 		createdAccount, err := s.Repository.CreateAccount(account)

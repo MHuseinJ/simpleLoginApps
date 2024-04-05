@@ -36,7 +36,7 @@ func createToken(username string) (string, error) {
 
 func validateRegisterRequest(request generated.RegisterRequest) []string {
 	var errors []string
-	patternPhone := "^\\+62\\d{10,13}$"
+	patternPhone := "^\\+62\\d{9,12}$"
 	hasUpper := regexp.MustCompile(`[A-Z]`).MatchString(request.Password)
 	hasDigit := regexp.MustCompile(`\d`).MatchString(request.Password)
 	hasSpecial := regexp.MustCompile(`[!@#$%^&*]`).MatchString(request.Password)

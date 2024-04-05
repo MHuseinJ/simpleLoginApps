@@ -61,8 +61,43 @@ func (s *Server) GetProfile(ctx echo.Context, params generated.GetProfileParams)
 }
 
 func (s *Server) UpdateProfile(ctx echo.Context, params generated.UpdateProfileParams) error {
-	//Todo Implement Update Profile
-	return nil
+	err := verifyToken(params.Authorization)
+	if err != nil {
+		fmt.Println(err.Error())
+		return ctx.JSON(http.StatusForbidden, generated.BasicResponse{Message: "Forbidden Access: " + err.Error()})
+	}
+	account, err := s.Repository.GetAccountByToken(ctx.Request().Context(), params.Authorization)
+	if err != nil {
+		fmt.Println(err.Error())
+		return ctx.JSON(http.StatusNotFound, generated.BasicResponse{Message: err.Error()})
+	}
+	var resp generated.ProfileResponse
+	json_map := make(map[string]interface{})
+	err = json.NewDecoder(ctx.Request().Body).Decode(&json_map)
+	if err != nil {
+		fmt.Println(err.Error())
+		return ctx.JSON(http.StatusBadRequest, generated.BasicResponse{Message: err.Error()})
+	} else {
+		var phone string
+		var fullname string
+		if json_map["phone"] != nil {
+			phone = json_map["phone"].(string)
+		}
+		if json_map["fullname"] != nil {
+			fullname = json_map["fullname"].(string)
+		}
+		updatedAccount := repository.Account{Id: account.Id, FullName: fullname, Phone: phone}
+		updatedAccount, err = s.Repository.UpdateAccount(updatedAccount)
+		if err != nil {
+			fmt.Println(err.Error())
+			return ctx.JSON(http.StatusConflict, generated.BasicResponse{Message: err.Error()})
+		}
+		fmt.Println(fullname, phone)
+		resp.Message = fmt.Sprintf("success updated profile id: %d", updatedAccount.Id)
+		resp.Fullname = fullname
+		resp.Phone = phone
+		return ctx.JSON(http.StatusOK, resp)
+	}
 }
 
 func (s *Server) Register(ctx echo.Context) error {

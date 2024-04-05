@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 )
 
 func (r *Repository) GetAccountByPhoneAndPassword(ctx context.Context, phone string, password string) (output Account, err error) {
@@ -12,8 +13,24 @@ func (r *Repository) GetAccountByPhoneAndPassword(ctx context.Context, phone str
 	}
 	return output, err
 }
-func (r *Repository) UpdateAccount(ctx context.Context, account Account) (output Account, err error) {
-	return
+func (r *Repository) UpdateAccount(account Account) (output Account, err error) {
+	var queryStr string
+	err = nil
+	if account.Phone != "" && account.FullName != "" {
+		queryStr = `UPDATE account SET phone = $1 ,fullname = $2 WHERE id = $3`
+		_, err = r.Db.Exec(queryStr, account.Phone, account.FullName, account.Id)
+	} else if account.Phone == "" {
+		queryStr = `UPDATE account SET fullname = $1 WHERE id = $2`
+		_, err = r.Db.Exec(queryStr, account.FullName, account.Id)
+	} else if account.FullName == "" {
+		queryStr = `UPDATE account SET phone = $1 WHERE id = $2`
+		_, err = r.Db.Exec(queryStr, account.Phone, account.Id)
+	}
+	fmt.Println(queryStr)
+	if err != nil {
+		return account, err
+	}
+	return account, nil
 }
 func (r *Repository) CreateAccount(account Account) (output Account, err error) {
 	queryStr := `INSERT INTO account (phone, password, fullname) 
